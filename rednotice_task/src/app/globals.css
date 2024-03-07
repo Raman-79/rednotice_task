@@ -1,0 +1,56 @@
+/* global.css */
+
+/* Apply Tailwind CSS utility classes globally */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Additional custom styles */
+
+/* Ensure tables have consistent borders and spacing */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* Apply border to all table cells */
+table, th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+/* Style table header */
+th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+/* Style buttons */
+.button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.25rem;
+  transition: background-color 0.3s ease;
+}
+
+.button-primary {
+  background-color: #4299e1;
+  color: #fff;
+}
+
+.button-primary:hover {
+  background-color: #3182ce;
+}
+
+.button-danger {
+  background-color: #e53e3e;
+  color: #fff;
+}
+
+.button-danger:hover {
+  background-color: #c53030;
+}

@@ -1,0 +1,106 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const nodemailer = require('nodemailer');
+const cors = require('cors');
+const dotenv = require('dotenv');
+
+dotenv.config();
+const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(cors())
+
+// Connect to MongoDB
+mongoose.connect('mongodb://127.0.0.1:27017/rednotice_task', {
+});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+// Define MongoDB Schema
+const entrySchema = new mongoose.Schema({
+  name: String,
+  phoneNumber: String,
+  email: String,
+  hobbies: String,
+});
+const Entry = mongoose.model('Entry', entrySchema);
+
+// Define routes
+app.post('/api/entries', async (req, res) => {
+  try {
+    const entry = new Entry(req.body);
+    await entry.save();
+	  
+    res.status(201).send('Entry added successfully');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error adding entry');
+  }
+});
+app.get('/api/entries',async (req,res)=>{
+  try {
+    const entries = await Entry.find();
+    res.json(entries);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Error fetching entries');
+  }
+})
+app.put('/api/entries/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const updatedEntry = await Entry.findByIdAndUpdate(id, req.body, { new: true });
+    if (!updatedEntry) {
+      return res.status(404).json({ error: 'Entry not found' });
+    }
+    res.json({ message: 'Entry updated successfully', entry: updatedEntry });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error updating entry' });
+  }
+});
+
+// Delete entry - DELETE request
+app.delete('/api/entries/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletedEntry = await Entry.findByIdAndDelete(id);
+    if (!deletedEntry) {
+      return res.status(404).json({ error: 'Entry not found' });
+    }
+    res.json({ message: 'Entry deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error deleting entry' });
+  }
+});
+
+
+// Send email
+app.post('/api/sendEmail', async (req, res) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'rs0774240@gmail.com',
+        pass: process.env.PASSWORD,
+      },
+    });
+    const mailOptions = {
+      from: 'rs0774240@gmail.com',
+      to:'ramansinghdsat@gmail.com',
+     // to: 'info@redpositive.in',
+      subject: 'Selected Row/Rows Data',
+      text: JSON.stringify(req.body),
+    };
+    await transporter.sendMail(mailOptions);
+    res.status(200).send('Email sent successfully');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error sending email');
+  }
+});
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
