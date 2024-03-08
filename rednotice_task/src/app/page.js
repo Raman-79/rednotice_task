@@ -17,7 +17,7 @@ const Home = () => {
   useEffect(() => {
     const fetchEntries = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/entries');
+        const response = await axios.get('https://rednotice-task.onrender.com/api/entries');
         setTableData(response.data);
       } catch (error) {
         console.error('Error:', error);
@@ -27,7 +27,7 @@ const Home = () => {
   }, []);
   const handleSendEmail = async () => {
     try {
-      await axios.post('http://localhost:3001/api/sendEmail', {rows:selectedRows});
+      await axios.post('https://rednotice-task.onrender.com/api/sendEmail', {rows:selectedRows});
     } catch (error) {
       console.error('Error:', error);
     }
@@ -49,7 +49,7 @@ const Home = () => {
 
   const handleAddEntry = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/api/entries', formData);
+      const response = await axios.post('https://rednotice-task.onrender.com/api/entries', formData);
       console.log(response.data);
       setTableData([...tableData, response.data.entry]);
       setShowAddForm(false);

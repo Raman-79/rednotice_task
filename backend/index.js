@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(cors())
 
 // Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/rednotice_task', {
+mongoose.connect('mongodb+srv://Raman:h6lC6KcGGq1P1mBZ@rednotice.jv9095s.mongodb.net/', {
 });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -89,8 +89,7 @@ app.post('/api/sendEmail', async (req, res) => {
     });
     const mailOptions = {
       from: 'rs0774240@gmail.com',
-      to:'ramansinghdsat@gmail.com',
-     // to: 'info@redpositive.in',
+      to: 'info@redpositive.in',
       subject: 'Selected Row/Rows Data',
       text: JSON.stringify(req.body),
     };
